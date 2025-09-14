@@ -67,7 +67,7 @@ const page = () => {
         } catch (error) {
             const axiosError = error as AxiosError<ApiResponse>
             let errorMessage = axiosError.response?.data.message
-            toast(errorMessage)
+            toast(errorMessage ? errorMessage : 'Server Error: Something went wrong')
         } finally {
             setIsSubmitting(false)
         }

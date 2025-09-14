@@ -10,7 +10,7 @@ export const authOptions: NextAuthOptions = {
             id: "credentials",
             name: "Credentials",
             credentials: {
-                email: { label: "Email", type: "text" },
+                identifier: { label: "Email/Username", type: "text" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials: any): Promise<any> {
@@ -39,9 +39,9 @@ export const authOptions: NextAuthOptions = {
                         throw new Error("Incorrect Password")
                     }
 
-
                 } catch (err: any) {
-                    throw new Error(err)
+                    console.log(err)
+                    throw new Error("Nextauth Error: ", err)
                 }
             }
         })
@@ -68,11 +68,11 @@ export const authOptions: NextAuthOptions = {
             return session
         }
     },
-    pages: {
-        signIn: '/signin',
-    },
     session: {
         strategy: "jwt"
     },
-    secret: process.env.NEXTAUTH_SECRET
-}
+    secret: process.env.NEXTAUTH_SECRET,
+    pages: {
+        signIn: '/sign-in',
+    }
+};
