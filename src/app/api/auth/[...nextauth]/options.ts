@@ -19,8 +19,8 @@ export const authOptions: NextAuthOptions = {
                 try {
                     const user = await UserModel.findOne({
                         $or: [
-                            { username: credentials.identifier },
-                            { email: credentials.identifier }
+                            { email: credentials.identifier },
+                            { username: credentials.identifier }
                         ]
                     })
 
@@ -40,8 +40,8 @@ export const authOptions: NextAuthOptions = {
                     }
 
                 } catch (err: any) {
-                    console.log(err)
-                    throw new Error("Nextauth Error: ", err)
+                    console.error("NextAuth authorize error:", err);
+                    throw new Error(err.message);
                 }
             }
         })
@@ -59,7 +59,7 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token }) {
             if (token) {
-                session.user._id = token._id
+                session.user._id = token._id as string
                 session.user.isVerified = token.isVerified
                 session.user.isAcceptingMessages = token.isAcceptingMessages
                 session.user.username = token.username
@@ -73,6 +73,6 @@ export const authOptions: NextAuthOptions = {
     },
     secret: process.env.NEXTAUTH_SECRET,
     pages: {
-        signIn: '/sign-in',
+        signIn: "/sign-in",
     }
 };

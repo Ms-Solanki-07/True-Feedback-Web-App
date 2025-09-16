@@ -16,16 +16,16 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 
-const page = () => {
+const UserDashboard = () => {
 	const [messages, setMessages] = useState<Message[]>([])
 	const [isLoading, setIsLoading] = useState(false)
-	const [isSwitchingLoading, setIsSwitchLoading] = useState(false)
+	const [isSwitchLoading, setIsSwitchLoading] = useState(false)
 
 	const handleDeleteMessage = (messageId: string) => {
-		setMessages(messages.filter((message) => { message._id !== messageId }))
+		setMessages(messages.filter((message) => message._id !== messageId))
 	}
 
-	const { data: session } = useSession()
+	const { data: session, status } = useSession()
 
 	const form = useForm({
 		resolver: zodResolver(acceptMessageSchema)
@@ -39,7 +39,9 @@ const page = () => {
 		setIsSwitchLoading(true)
 		try {
 			const response = await axios.get<ApiResponse>('/api/accept-messages')
-			setValue('acceptMessages', response.data.isAcceptingMessage as boolean)
+			setValue('acceptMessages', response.data.isAcceptingMessages as boolean)
+			console.log(response)
+
 		} catch (error) {
 			const axiosError = error as AxiosError<ApiResponse>
 			toast(axiosError.response?.data.message || "Failed to fetch message settings")
@@ -68,7 +70,7 @@ const page = () => {
 	}, [setIsLoading, setMessages])
 
 	useEffect(() => {
-		if (!session || !session.user) return
+		if(!session || !session?.user) return
 
 		fetchAcceptMessage()
 		fetchMessages()
@@ -77,7 +79,7 @@ const page = () => {
 	//handle switch change
 	const handleSwitchChange = async () => {
 		try {
-			const response = await axios.post<ApiResponse>('/api/accept-message', {
+			const response = await axios.post<ApiResponse>('/api/accept-messages', {
 				acceptMessages: !acceptMessages
 			})
 
@@ -89,18 +91,15 @@ const page = () => {
 		}
 	}
 
-	const { username } = session?.user as User
+	const SessionUser = session?.user as User
+	const username = SessionUser?.username
 
 	const baseUrl = `${window.location.protocol}//${window.location.host}`
 	const profileUrl = `${baseUrl}/u/${username}`
 
 	const copyToClipboard = () => {
 		navigator.clipboard.writeText(profileUrl)
-		toast("URL Copied")
-	}
-
-	if (!session || !session.user) {
-		return <div>Please Login</div>;
+		toast("URL Copied to clipboard")
 	}
 
 	return (
@@ -114,7 +113,7 @@ const page = () => {
 						type="text"
 						value={profileUrl}
 						disabled
-						className="input input-bordered w-full p-2 mr-2"
+						className="input input-bordered w-full p-2 mr-2 border-1 rounded-lg"
 					/>
 					<Button onClick={copyToClipboard}>Copy</Button>
 				</div>
@@ -125,7 +124,7 @@ const page = () => {
 					{...register('acceptMessages')}
 					checked={acceptMessages}
 					onCheckedChange={handleSwitchChange}
-					disabled={isSwitchingLoading}
+					disabled={isSwitchLoading}
 				/>
 				<span className="ml-2">
 					Accept Messages: {acceptMessages ? 'On' : 'Off'}
@@ -164,4 +163,4 @@ const page = () => {
 	)
 }
 
-export default page
+export default UserDashboard

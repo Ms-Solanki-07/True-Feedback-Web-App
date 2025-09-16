@@ -28,13 +28,12 @@ const page = () => {
         }
     })
 
-    const onSubmit = async (data: z.infer<typeof signInSchema>, e?: React.FormEvent) => {
-        e?.preventDefault() 
+    const onSubmit = async (data: z.infer<typeof signInSchema>) => {
         setIsSubmitting(true)
-        const result = await signIn('credentials', {
+        const result = await signIn("credentials", {
+            redirect: false,
             identifier: data.identifier,
             password: data.password,
-            redirect: false,
         });
 
         if (result?.error) {
@@ -45,9 +44,12 @@ const page = () => {
             }
         }
 
-        if (result?.url) {
-            router.replace('/dashboard')
+        if (result?.ok && !result.error) {
+            if (result?.url) {
+                router.push('/dashboard');
+            }
         }
+
         setIsSubmitting(false)
     }
 
@@ -70,7 +72,7 @@ const page = () => {
                                 <FormItem>
                                     <FormLabel>Email/Username</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="email/username" {...field} />
+                                        <Input placeholder="Email/Username" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -83,7 +85,7 @@ const page = () => {
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
-                                        <Input type="password" placeholder="password" {...field} />
+                                        <Input type="password" placeholder="Password" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

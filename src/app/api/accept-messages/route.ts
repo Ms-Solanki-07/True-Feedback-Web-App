@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../[...nextauth]/options";
+import { authOptions } from "../auth/[...nextauth]/options";
 import { dbConnect } from "@/lib/dbConnect";
 import UserModel from "@/model/User";
-import { User } from "next-auth";
+import { User } from "next-auth"; 
 
 
 export async function POST(request: Request) {
@@ -19,12 +19,13 @@ export async function POST(request: Request) {
     }
 
     const userId = user._id
-    const { acceptMessage } = await request.json()
+    const { acceptMessages } = await request.json()
+    console.log(acceptMessages)
 
     try {
         const updatedUser = await UserModel.findByIdAndUpdate(
             userId,
-            { isAcceptingMessage: acceptMessage },
+            { isAcceptingMessages: acceptMessages },
             { new: true }
         )
 
@@ -60,7 +61,7 @@ export async function GET(request: Request) {
     const userId = user._id
 
     try {
-        const foundUser = await UserModel.findById(userId)
+        const foundUser = await UserModel.findById(userId) 
 
         if (!foundUser) {
             return Response.json({
@@ -68,10 +69,11 @@ export async function GET(request: Request) {
                 message: "User not found"
             }, { status: 404 })
         }
+        console.log(foundUser)
 
         return Response.json({
             success: true,
-            isAcceptingMessages: foundUser.isAcceptingMessage
+            isAcceptingMessages: foundUser.isAcceptingMessages
         }, { status: 200 })
 
     } catch (error) {
