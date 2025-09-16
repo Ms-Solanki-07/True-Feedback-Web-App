@@ -18,8 +18,7 @@ export async function POST(request: Request) {
             verifyCode: {code}
         }
 
-        const result = verifyCodeQuerySchema.safeParse(queryParams)
-        console.log("result: ", result)
+        const result = verifyCodeQuerySchema.safeParse(queryParams) 
 
         if (!result.success) {
             const verifyCodeErrors = result.error.format().verifyCode?.code?._errors || []

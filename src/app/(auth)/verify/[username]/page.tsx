@@ -28,8 +28,7 @@ const page = () => {
                 username: params.username,
                 code: data.code
             })
-
-            console.log(response)
+ 
             toast(response.data)
 
             router.replace('/sign-in')

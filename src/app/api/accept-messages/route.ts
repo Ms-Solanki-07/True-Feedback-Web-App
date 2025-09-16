@@ -19,8 +19,7 @@ export async function POST(request: Request) {
     }
 
     const userId = user._id
-    const { acceptMessages } = await request.json()
-    console.log(acceptMessages)
+    const { acceptMessages } = await request.json() 
 
     try {
         const updatedUser = await UserModel.findByIdAndUpdate(
@@ -68,8 +67,7 @@ export async function GET(request: Request) {
                 success: false,
                 message: "User not found"
             }, { status: 404 })
-        }
-        console.log(foundUser)
+        } 
 
         return Response.json({
             success: true,
