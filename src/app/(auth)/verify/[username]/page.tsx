@@ -28,10 +28,16 @@ const page = () => {
                 username: params.username,
                 code: data.code
             })
- 
-            toast(response.data)
+            
+            toast.success("Verification successful!", {
+                duration: 1000, // 2 seconds
+            });
 
-            router.replace('/sign-in')
+            // Wait for toast to finish, then navigate
+            setTimeout(() => {
+                router.replace("/sign-in");
+            }, 1000);
+
 
         } catch (error) {
             const axiosError = error as AxiosError<ApiResponse>

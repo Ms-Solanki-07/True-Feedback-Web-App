@@ -15,7 +15,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-
 const UserDashboard = () => {
 	const [messages, setMessages] = useState<Message[]>([])
 	const [isLoading, setIsLoading] = useState(false)
@@ -53,7 +52,7 @@ const UserDashboard = () => {
 		setIsSwitchLoading(false)
 		try {
 			const response = await axios.get<ApiResponse>('/api/get-messages')
-			setMessages(response?.data.messages || [])
+			setMessages(response.data.messages || [])
 
 			if (refresh) {
 				toast("showing latest messages")
@@ -67,8 +66,9 @@ const UserDashboard = () => {
 		}
 	}, [setIsLoading, setMessages])
 
+
 	useEffect(() => {
-		if(!session || !session?.user) return
+		if (!session || !session?.user) return
 
 		fetchAcceptMessage()
 		fetchMessages()
@@ -148,7 +148,7 @@ const UserDashboard = () => {
 				{messages.length > 0 ? (
 					messages.map((message, index) => (
 						<MessageCard
-							key={message._id}
+							key={message._id as string ?? index}
 							message={message}
 							onMessageDelete={handleDeleteMessage}
 						/>

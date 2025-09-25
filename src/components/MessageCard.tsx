@@ -41,11 +41,11 @@ const MessageCard = ({message, onMessageDelete}: MessageCardProps) => {
 
     return (
         <Card>
-            <CardHeader>
-                <CardTitle>Card Title</CardTitle>
+            <CardHeader className="space-y-6">
+                <CardTitle>{message.content}</CardTitle>
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button variant="destructive"><X className="w-5 h-5"/></Button>
+                        <Button variant="destructive">Delete Message<X className="w-5 h-5"/></Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                         <AlertDialogHeader>
@@ -59,13 +59,8 @@ const MessageCard = ({message, onMessageDelete}: MessageCardProps) => {
                             <AlertDialogAction onClick={handleDeleteConfirm}>Continue</AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>
-                </AlertDialog>
-                <CardDescription>Card Description</CardDescription>
+                </AlertDialog> 
             </CardHeader>
-            <CardContent>
-            </CardContent>
-            <CardFooter>
-            </CardFooter>
         </Card>
     )
 }
